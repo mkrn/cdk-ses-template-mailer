@@ -1,12 +1,13 @@
 {
   "name": "cdk-ses-template-mailer",
-  "version": "0.1.9",
+  "version": "0.1.13",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "scripts": {
     "build": "tsc",
     "watch": "tsc -w",
-    "test": "nodeunit test/test.*.js"
+    "test": "nodeunit test/test.*.js",
+    "prepare": "tsc"
   },
   "devDependencies": {
     "@types/node": "^12.7.2",
