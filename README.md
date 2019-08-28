@@ -7,11 +7,14 @@
 - SQS queue that sends templated emails in batches without going over your SES limits
 - Easy to drop-in to your project and use right away
 - 0 idle costs. 100% serverless
+- You can create up to 10,000 email templates per Amazon SES account.
+- Each template can be up to 500KB in size, including both the text and HTML parts.
+
 
 ## Pre-requisites
-- FromEmail needs to be verified in AWS SES
+- FromEmail needs to be verified in AWS SES `aws ses verify-email-identity --email-address support@mydomain.com`
 - Apply for a sending limit increase (https://docs.aws.amazon.com/ses/latest/DeveloperGuide/request-production-access.html) to be able to send to non-verified emails
-- If you indicate RenderFailuresNotificationsEmail you will receive an "AWS Notification - Subscription Confirmation" email
+- If you indicate RenderFailuresNotificationsEmail you will receive an "AWS Notification - Subscription Confirmation" email. 
 
 ## Use
 ```
@@ -26,19 +29,37 @@ new SESEmailTemplate(this, 'Email1', {
 
 // ... define more templates....
 
-new SESTemplateMailer(this, 'Mailer', {
-    FromEmail: 'mysesverifiedemail@domain.com',
+const mailer = new SESTemplateMailer(this, 'Mailer', {
+    FromEmail: 'support@mydomain.com',
     FromName: 'My Service',
-    RenderFailuresNotificationsEmail: 'myemail@gmail.com' // optionally know 
+    RenderFailuresNotificationsEmail: 'myemail@gmail.com' // optional. add your email to receive render failure notifications
 });
 
+new cdk.CfnOutput(this, 'SQSQueueURL', {
+    value: mailer.queue.queueUrl
+})
+
+```
+
+## SQS Message format
+```
+export interface SESTemplateMailerEventBody {
+    guest: {
+        name?: string,
+        email: string
+    },
+    notification_type: string
+}
 ```
 
 ## Test
 
 ```
-aws sqs send-message --queue-url=https://sqs.us-east-1.amazonaws.com/829654343590/CdkStackEast-MailerMailerQueueC30A6507-3HU1M24EX5R9 --message-body='{ "data": {}, "notification_type": "mytemplate", "guest": { "email": "destination@gmail.com", "name": "Name" }}'
+aws sqs send-message --queue-url=QUEUE_URL_FROM_OUTPUTS --message-body='{ "data": {}, "notification_type": "mytemplate", "guest": { "email": "destination@gmail.com", "name": "Name" }}'
 ```
+
+## TODO 
+- Explore SendBulkTemplatedEmail (send email to up to 50 destinations in each call)
 
 ## Useful commands
 
