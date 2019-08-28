@@ -106,6 +106,7 @@ aws sqs send-message --queue-url=QUEUE_URL_FROM_OUTPUTS --message-body='{ "data"
 ## TODO 
 - Explore SendBulkTemplatedEmail (send email to up to 50 destinations in each call)
 - Add automated email tracking and stats collection?
+- Export Message Type
 - Tests
 
 ## Useful commands
