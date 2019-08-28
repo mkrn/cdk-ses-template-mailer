@@ -24,6 +24,7 @@
 ```
 import { SESEmailTemplate, SESTemplateMailer } from 'cdk-ses-template-mailer';
 
+// Read from files
 new SESEmailTemplate(this, 'Email1', {
     TemplateName: 'mytemplate',
     TextPart: fs.readFileSync(__dirname + '/../ses-templates/mytemplate/template.txt', 'utf8'),
@@ -31,6 +32,7 @@ new SESEmailTemplate(this, 'Email1', {
     SubjectPart: 'Email Subject Goes Here'
 });
 
+// Or embed
 new SESEmailTemplate(this, 'EventLiveEmail', {
     TemplateName: 'eventLive',
     TextPart: 'Hi {{guest.name}}, {{data.event_title}} is Live!'
@@ -48,6 +50,10 @@ const mailer = new SESTemplateMailer(this, 'Mailer', {
 
 new cdk.CfnOutput(this, 'SQSQueueURL', {
     value: mailer.queue.queueUrl
+})
+
+new cdk.CfnOutput(this, 'SNSRenderFailureTopicArn', {
+    value: mailer.snsRenderFailuresTopic.topicArn
 })
 
 ```

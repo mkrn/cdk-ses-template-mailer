@@ -1,4 +1,3 @@
-import cfn = require('@aws-cdk/aws-cloudformation');
 import lambda = require('@aws-cdk/aws-lambda');
 import cdk = require('@aws-cdk/core');
 import iam = require('@aws-cdk/aws-iam');
@@ -16,23 +15,24 @@ export interface SESTemplateMailerProps {
 
 export class SESTemplateMailer extends cdk.Construct {
   public readonly queue: sqs.Queue;
+  public readonly snsRenderFailuresTopic: sns.Topic;
 
   constructor(scope: cdk.Construct, id: string, props: SESTemplateMailerProps) {
     super(scope, id);
 
     const { FromName, FromEmail, RenderFailuresNotificationsEmail } = props;
 
-    const sesConfig = new ses.CfnConfigurationSet(this, 'ConfigurationSet', {
+    new ses.CfnConfigurationSet(this, 'ConfigurationSet', {
         name: 'SendConfig'
     });
 
-    const snsRenderFailuresTopic = new sns.Topic(this, 'RenderFailureTopic', {
+    this.snsRenderFailuresTopic = new sns.Topic(this, 'RenderFailureTopic', {
         topicName: 'sesSendConfigRenderFailures'
     });
 
     if (RenderFailuresNotificationsEmail) {
         new sns.Subscription(this, 'EmailSubscription', {
-            topic: snsRenderFailuresTopic,
+            topic: this.snsRenderFailuresTopic,
             protocol: sns.SubscriptionProtocol.EMAIL,
             endpoint: RenderFailuresNotificationsEmail
         })
@@ -42,7 +42,7 @@ export class SESTemplateMailer extends cdk.Construct {
         ConfigurationSetName: 'SendConfig',
         EventDestinationName: 'SNSRenderingFailures',
         MatchingEventTypes: ['renderingFailure'],
-        TopicARN: snsRenderFailuresTopic.topicArn
+        TopicARN: this.snsRenderFailuresTopic.topicArn
     })
 
     const deadLetterQueue = new sqs.Queue(this, 'MailerDeadLetterQueue', {
