@@ -6,10 +6,13 @@
 ## Features 
 - Custom resource to create SES Email Templates (functionality missing in AWS UX and CloudFormation)
 - Custom resource to add SNS destination to message delivery events
-- SNS topic and optional subscription to notify you of template render fails!
-- SQS queue that sends templated emails in batches without going over your SES limits
+- SNS topic and optional email subscription to notify you of template render fails!
+- Lambda with an SQS queue to send emails without going over your SES limits
 - Easy to drop-in to your project and use right away
+- Perfect for transactional and drip emails 
 - 0 idle costs. 100% serverless
+
+## SES Features
 - You can create up to 10,000 email templates per Amazon SES account.
 - Each template can be up to 500KB in size, including both the text and HTML parts.
 
