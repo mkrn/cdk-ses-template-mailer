@@ -88,18 +88,19 @@ new SESSNSDestination(this, 'CustomEmailEventsTopicSNSDestination', {
 ## SQS Message format
 ```
 export interface SESTemplateMailerEventBody {
-    guest: {
+    to: {
         name?: string,
         email: string
     },
-    notification_type: string
+    data: any,
+    template: string // name of template
 }
 ```
 
 ## Test
 
 ```
-aws sqs send-message --queue-url=QUEUE_URL_FROM_OUTPUTS --message-body='{ "data": {}, "notification_type": "mytemplate", "guest": { "email": "destination@gmail.com", "name": "Name" }}'
+aws sqs send-message --queue-url=QUEUE_URL_FROM_OUTPUTS --message-body='{ "data": {}, "template": "mytemplate", "to": { "email": "destination@gmail.com", "name": "Name" }}'
 ```
 
 ## TODO 

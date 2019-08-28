@@ -8,11 +8,12 @@ export interface SESTemplateMailerEvent {
 }
 
 export interface SESTemplateMailerEventBody {
-    guest: {
+    to: {
         name?: string,
         email: string
     },
-    notification_type: string
+    data: any,
+    template: string // name of template
 }
 
 const FROM = process.env.FROM;
@@ -26,19 +27,20 @@ exports.handler = async (event: SESTemplateMailerEvent, context: any) => {
     await Promise.all(
       Records.map(async ({ body }: any) => {
         console.log(body);
+
         const message = JSON.parse(body) as SESTemplateMailerEventBody;
 
-        const { guest, notification_type } = message;
+        const { to, template } = message;
 
-        console.log(`Emailing ${guest.name} ${guest.email} ${notification_type}`);
+        console.log(`Emailing ${to.name} ${to.email} ${template}`);
 
         const params = {
           "Source": FROM,
-          "Template": notification_type,
+          "Template": template,
           "Destination": {
-            "ToAddresses": [ guest.email ]
+            "ToAddresses": [ to.email ]
           },
-          "TemplateData": body,
+          "TemplateData": body, // entire body will be available: data, template, to
           "ConfigurationSetName": "SendConfig",
         }
 
