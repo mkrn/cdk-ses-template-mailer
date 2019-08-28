@@ -1,4 +1,5 @@
 import lambda = require('@aws-cdk/aws-lambda');
+import path = require('path');
 import cdk = require('@aws-cdk/core');
 import iam = require('@aws-cdk/aws-iam');
 import sqs = require('@aws-cdk/aws-sqs');
@@ -60,7 +61,7 @@ export class SESTemplateMailer extends cdk.Construct {
 
     const mailerLambda = new lambda.Function(this, 'MailerLambda', {
         runtime: lambda.Runtime.NODEJS_8_10,
-        code: lambda.Code.asset('lambda'),
+        code: lambda.Code.asset(path.join(__dirname, '../lambda')),
         handler: 'sesTemplateMailer.handler',
         environment: {
             FROM: `${FromName} <${FromEmail}>`
