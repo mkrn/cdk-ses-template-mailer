@@ -38,7 +38,7 @@ new SESEmailTemplate(this, 'Email1', {
 // Or embed
 new SESEmailTemplate(this, 'EventLiveEmail', {
     TemplateName: 'eventLive',
-    TextPart: 'Hi {{guest.name}}, {{data.event_title}} is Live!'
+    TextPart: 'Hi {{guest.name}}, {{data.event_title}} is Live!',
     HtmlPart: '<strong>Hi {{guest.name}}</strong><br />{{data.event_title}} is Live!',
     SubjectPart: '{{data.event_title}} is Live!'
 });

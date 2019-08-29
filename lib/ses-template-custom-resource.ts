@@ -4,12 +4,20 @@ import cdk = require('@aws-cdk/core');
 import iam = require('@aws-cdk/aws-iam');
 import fs = require('fs');
 
-export interface SESEmailTemplateProps {
-    TemplateName: string,
-    SubjectPart: string,
-    HtmlPart: string,
-    TextPart: string,
+interface BaseTemplate {
+  TemplateName: string,
+  SubjectPart: string
 }
+
+interface HTMLTemplate extends BaseTemplate {
+  HtmlPart: string
+}
+
+interface TextTemplate extends BaseTemplate {
+  TextPart: string,
+}
+
+export type SESEmailTemplateProps = HTMLTemplate | TextTemplate | (HTMLTemplate & TextTemplate);
 
 export class SESEmailTemplate extends cdk.Construct {
   public readonly response: string;
