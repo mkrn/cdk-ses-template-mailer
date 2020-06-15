@@ -1,4 +1,6 @@
-# SES Templated Emails Helper Constructs for AWS CDK
+# UPDATE: DEPRECATED. USE https://docs.aws.amazon.com/cdk/api/latest/docs/@aws-cdk_aws-ses.CfnTemplate.html 
+
+## SES Templated Emails Helper Constructs for AWS CDK
 
 ## Why 
 - AWS SES Templates are amazing but pain to setup and manage
